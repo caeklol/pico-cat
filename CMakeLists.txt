@@ -19,7 +19,7 @@ file(GLOB_RECURSE code_SRC
 
 add_executable(code ${code_SRC})
 
-target_link_libraries(code pico_stdlib hardware_spi hardware_i2c hardware_pwm)
+target_link_libraries(code pico_stdlib hardware_pwm)
 
 # Enable USB output, disable UART output
 pico_enable_stdio_usb(code 1)
