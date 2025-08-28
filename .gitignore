@@ -1,2 +1,5 @@
 build/
 target/
+src/pcm_data.h
+*.mp3
+*.pcm
