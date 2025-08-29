@@ -142,10 +142,9 @@ int main() {
 
 		pwm_set_enabled(radio_slice, playing);
 		if (playing) {
-			pwm_set_clkdiv_int_frac4(radio_slice, 1, (amplitude >> 3)); // todo: clock_gpio_init_int_frac16 conv
+			pwm_set_clkdiv_int_frac4(radio_slice, 1, (amplitude / 8)); // todo: clock_gpio_init_int_frac16 conv
 																	  // / 2 to get in range (nibble required, as per docs)
 																	  // / 4 to get bandwidth into NFM ranges
-																	  // / 8 = 2^3
 			sleep_us(2);
 		} else {
 			sleep_ms(20);
