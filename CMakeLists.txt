@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
-include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+include(pico-sdk/pico_sdk_init.cmake)
+include(pico-extras/external/pico_extras_import.cmake)
 
 project(placeholder-fc C CXX)
 
@@ -19,7 +20,7 @@ file(GLOB_RECURSE code_SRC
 
 add_executable(code ${code_SRC})
 
-target_link_libraries(code pico_stdlib hardware_pwm)
+target_link_libraries(code pico_stdlib hardware_pwm hardware_sleep)
 
 # Enable USB output, disable UART output
 pico_enable_stdio_usb(code 1)

@@ -4,6 +4,7 @@ async function convert(inputFile, outputHeaderFile) {
   let headerContent = "";
   headerContent += "#ifndef RAW_PCM_DATA_H\n";
   headerContent += "#define RAW_PCM_DATA_H\n\n";
+  headerContent += `const uint32_t audio_pcm_size = ${pcmData.length};\n`;
   headerContent += "const uint8_t audio_pcm[] = {\n";
 
   pcmData.forEach((byte, i) => {
