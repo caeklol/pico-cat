@@ -14,9 +14,9 @@
 
 unsigned int radio_pin = 8;
 
-static uint red = 1;
-static uint green = 2;
-static uint blue = 3;
+static uint red_pin = 1;
+static uint green_pin = 2;
+static uint blue_pin = 3;
 
 static uint meow_pin = 4;
 static uint toggle_pin = 10;
@@ -28,6 +28,7 @@ volatile absolute_time_t last_toggle = {0};
 volatile absolute_time_t last_meow = {0};
 volatile bool asleep = false;
 volatile bool playing = false;
+static bool radio_enabled;
 
 static struct repeating_timer timer;
 
@@ -82,6 +83,9 @@ void meow() {
 	playing = true;
 	index = 0;
 	add_repeating_timer_us(-1e6 / (SAMPLING_RATE * 2), play_sample, NULL, &timer);
+
+	uint radio_slice = pwm_gpio_to_slice_num(radio_pin);
+	pwm_set_enabled(radio_slice, playing);
 }
 
 void irq_handler(uint gpio, uint32_t event_mask) {
@@ -102,18 +106,59 @@ void setup_buttons() {
 	// there's a possibility we just came back from a restart, and the button is still bouncing
 	sleep_ms(100); // so this sleep should hopefully give enough time for that bounce to stop
 	gpio_set_irq_enabled(toggle_pin, GPIO_IRQ_EDGE_RISE, true);
-	gpio_set_irq_enabled(meow_pin, GPIO_IRQ_EDGE_RISE, true);
+	if (radio_enabled) gpio_set_irq_enabled(meow_pin, GPIO_IRQ_EDGE_RISE, true);
 	gpio_set_irq_callback(&irq_handler);
 	irq_set_enabled(IO_IRQ_BANK0, true);
 }
 
 void setup_radio() {
-	gpio_set_function(radio_pin, GPIO_FUNC_PWM);
+	uint slice_red = pwm_gpio_to_slice_num(red_pin);
+    uint slice_green = pwm_gpio_to_slice_num(green_pin);
+    uint slice_blue = pwm_gpio_to_slice_num(blue_pin);
+
     uint slice_num = pwm_gpio_to_slice_num(radio_pin);
+	if (slice_num == slice_red ||
+		slice_num == slice_green ||
+		slice_num == slice_blue
+	   ) {
+		radio_enabled = false;
+		return;
+	}
+
+	gpio_set_function(radio_pin, GPIO_FUNC_PWM);
 
 	pwm_set_clkdiv_mode(slice_num, PWM_DIV_FREE_RUNNING);
     pwm_set_wrap(slice_num, 2);
     pwm_set_chan_level(slice_num, PWM_CHAN_A, 1);
+
+	radio_enabled = true;
+}
+
+void setup_led() {
+	gpio_set_function(red_pin, GPIO_FUNC_PWM);
+	gpio_set_function(green_pin, GPIO_FUNC_PWM);
+	gpio_set_function(blue_pin, GPIO_FUNC_PWM);
+
+	uint slice_red = pwm_gpio_to_slice_num(red_pin);
+    uint slice_green = pwm_gpio_to_slice_num(green_pin);
+    uint slice_blue = pwm_gpio_to_slice_num(blue_pin);
+
+	uint chan_red = pwm_gpio_to_channel(red_pin);
+    uint chan_green = pwm_gpio_to_channel(green_pin);
+    uint chan_blue = pwm_gpio_to_channel(blue_pin);
+
+	uint16_t wrap = 255;
+    pwm_set_wrap(slice_red, wrap);
+    pwm_set_wrap(slice_green, wrap);
+    pwm_set_wrap(slice_blue, wrap);
+
+	pwm_set_enabled(slice_red, true);
+    pwm_set_enabled(slice_green, true);
+    pwm_set_enabled(slice_blue, true);
+
+	pwm_set_chan_level(slice_red, chan_red, 128);
+	pwm_set_chan_level(slice_green, chan_green, 64);
+	pwm_set_chan_level(slice_blue, chan_blue, 128);
 }
 
 int main() {
@@ -128,19 +173,18 @@ int main() {
 									  // thing, or maybe is a clkdiv thing, but whatever
 									  // works i guess
 	printf("overclocked!\n");
-	setup_buttons();
 	setup_radio();
+	setup_buttons();
 	printf("setup done\n");
-
-	uint radio_slice = pwm_gpio_to_slice_num(radio_pin);
 
 	int n = 0;
 	uint64_t last_tick = 0;
 
+	uint radio_slice = pwm_gpio_to_slice_num(radio_pin);
+
 	while(1) {
 		if (asleep) continue;
 
-		pwm_set_enabled(radio_slice, playing);
 		if (playing) {
 			pwm_set_clkdiv_int_frac4(radio_slice, 1, (amplitude / 8)); // todo: clock_gpio_init_int_frac16 conv
 																	  // / 2 to get in range (nibble required, as per docs)
