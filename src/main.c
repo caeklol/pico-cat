@@ -58,7 +58,7 @@ int main() {
 
 		uint64_t now = to_us_since_boot(get_absolute_time());
 
-		if (now - last_tick >= 20000) {
+		if (now - last_tick >= 200000) {
 			n += 1;
 			led_tick();
 			last_tick = now;

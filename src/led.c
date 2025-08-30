@@ -1,8 +1,10 @@
+#include <stdio.h>
+
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 
 #include "globals.h"
-
+#include "audio.h"
 
 // integer-math only `map`. taken from https://docs.arduino.cc/language-reference/en/functions/math/map/
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
@@ -29,6 +31,10 @@ void set_color(uint8_t red, uint8_t green, uint8_t blue) {
 
 void led_tick() {
 	set_color(255, 255, 255);
+}
+
+void led_interact() {
+	printf(">///////<\n");
 }
 
 void led_setup() {
