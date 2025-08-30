@@ -14,7 +14,6 @@
 
 int main() {
 	stdio_init_all();
-
 	printf("stdio initialized\n");
 
 	set_sys_clock_khz(220000, false); // 220MHz, giving fs*2 harmonic. yes, square waves
@@ -38,7 +37,6 @@ int main() {
 	led_setup();
 	printf("setup done\n");
 
-	int n = 0;
 	uint64_t last_tick = 0;
 
 	while(1) {
@@ -58,11 +56,9 @@ int main() {
 
 		uint64_t now = to_us_since_boot(get_absolute_time());
 
-		if (now - last_tick >= 200000) {
-			n += 1;
-			led_tick();
+		if (now - last_tick >= 20000) {
 			last_tick = now;
-			printf("iter %d\n", n);
+			led_tick();
 		}
 	}
 }

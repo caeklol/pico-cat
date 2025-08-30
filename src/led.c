@@ -6,6 +6,9 @@
 #include "globals.h"
 #include "audio.h"
 
+uint8_t hue = 0;
+int mode = 0;
+
 // integer-math only `map`. taken from https://docs.arduino.cc/language-reference/en/functions/math/map/
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -29,12 +32,53 @@ void set_color(uint8_t red, uint8_t green, uint8_t blue) {
 	pwm_set_chan_level(slice_blue, chan_blue, blue_constrained);
 }
 
+void hsv_to_rgb(uint8_t hue, uint8_t* r, uint8_t* g, uint8_t* b) {
+  uint8_t region = hue / 43;
+  uint8_t remainder = (hue - (region * 43)) * 6;
+
+  uint8_t p = 0;
+  uint8_t q = (255 * (255 - remainder)) / 255;
+  uint8_t t = (255 * remainder) / 255;
+
+  switch (region) {
+    case 0:
+      *r = 255; *g = t; *b = p;
+      break;
+    case 1:
+      *r = q; *g = 255; *b = p;
+      break;
+    case 2:
+      *r = p; *g = 255; *b = t;
+      break;
+    case 3:
+      *r = p; *g = q; *b = 255;
+      break;
+    case 4:
+      *r = t; *g = p; *b = 255;
+      break;
+    default:
+      *r = 255; *g = p; *b = q;
+      break;
+  }
+}
+
 void led_tick() {
-	set_color(255, 255, 255);
+	if (mode == 0) {
+		uint8_t r, g, b;
+		hsv_to_rgb(hue, &r, &g, &b);
+
+		set_color(r, g, b);
+
+		hue++;
+	} else if (mode == 1) {
+		set_color(255, 195, 77);
+	} else {
+		set_color(255, 255, 255);
+	}
 }
 
 void led_interact() {
-	printf(">///////<\n");
+	mode = (mode + 1) % 4;
 }
 
 void led_setup() {
