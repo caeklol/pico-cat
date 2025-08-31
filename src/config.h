@@ -7,8 +7,11 @@
 // debounce for both edges in microseconds
 #define DEBOUNCE_US 10000
 
+// enable meowing via radio on long-press
+//#define ENABLE_RADIO
+
 // pin definitions. since this is Pico SDK, this corresponds to the RP2040 pins
-#define RADIO_PIN      8
+#define RADIO_PIN      8   // leave even if ENABLE_RADIO is false.
 #define INTERACT_PIN   4
 #define TOGGLE_PIN     10
 
@@ -29,6 +32,6 @@
 #define BLUE_MAX       255
 
 // for DEBUG_PRINT and DEBUG_INIT
-#define ENABLE_DEBUG
+//#define ENABLE_DEBUG
 
 #endif

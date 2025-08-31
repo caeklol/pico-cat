@@ -19,12 +19,13 @@ toggle button is on GP10 \
 active high for buttons, using builtin pulldown
 
 #### usage
-long press the interact button to make the cat meow over FM \
-short press to cycle through LED states \
+press to cycle through LED states \
+if radio is enabled, long press the interact button to make the cat meow over FM \
 there is warm white (default), cool white, and RGB
 
 ## configuration
-configuration is done via [`src/config.h`](src/config.h)
+configuration is done via [`src/config.h`](src/config.h) \
+radio and debug (via serial) are disabled by default
 
 ## reception
 i got best results on my RTL-SDR at 25kHz with 50us de-emphasis

@@ -81,12 +81,19 @@ void interact(bool edge) {
 	time_interact_high = now;
 
 	if (edge) return;
+#ifdef ENABLE_RADIO
 	if (diff >= 600000) {
+		if (audio_config == NULL) return;
 		if (audio_is_playing(audio_config)) return;
-		if (audio_config != NULL) audio_play(audio_config);
+		audio_play(audio_config);
 	} else {
+#endif
+
 		led_interact();
+
+#ifdef ENABLE_RADIO
 	}
+#endif
 }
 
 // edge == true means rising edge, vice versa
@@ -102,6 +109,8 @@ void irq_handler(uint gpio, uint32_t event_mask) {
 		if (!debounced(&interact_debounce, rise)) return;
 		interact(rise);
 	}
+
+	DEBUG_PRINT("IRQ for %d\n", gpio);
 }
 
 void buttons_setup(audio_configuration_t* c) {
@@ -117,7 +126,7 @@ void buttons_setup(audio_configuration_t* c) {
 	gpio_set_irq_enabled(TOGGLE_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true);
 
 	audio_config = c;
-	if (audio_config != NULL) gpio_set_irq_enabled(INTERACT_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true);
+	gpio_set_irq_enabled(INTERACT_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true);
 
 	gpio_set_irq_callback(&irq_handler);
 	irq_set_enabled(IO_IRQ_BANK0, true);

@@ -76,7 +76,7 @@ void led_tick() {
 }
 
 void led_interact() {
-	mode = (mode + 1) % 4;
+	mode = (mode + 1) % 3;
 }
 
 void led_setup() {

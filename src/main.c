@@ -21,7 +21,12 @@ int main() {
 									  // thing, or maybe is a clkdiv thing, but whatever
 									  // works i guess
 	DEBUG_PRINT("overclocked!\n");
+
+#ifdef ENABLE_RADIO
 	bool radio_enabled = radio_setup();
+#else
+	bool radio_enabled = false;
+#endif
 
 	audio_configuration_t* audio = NULL;
 
@@ -56,6 +61,7 @@ int main() {
 
 		if (now - last_tick >= 20000) {
 			last_tick = now;
+			DEBUG_PRINT("led tick! %d\n", now);
 			led_tick();
 		}
 	}
