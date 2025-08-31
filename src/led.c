@@ -62,16 +62,16 @@ void hsv_to_rgb(uint8_t hue, uint8_t* r, uint8_t* g, uint8_t* b) {
 
 void led_tick() {
 	if (mode == 0) {
+		set_color(255, 195, 77);
+	} else if (mode == 1) {
+		set_color(255, 255, 255);
+	} else {
 		uint8_t r, g, b;
 		hsv_to_rgb(hue, &r, &g, &b);
 
 		set_color(r, g, b);
 
 		hue++;
-	} else if (mode == 1) {
-		set_color(255, 195, 77);
-	} else {
-		set_color(255, 255, 255);
 	}
 }
 
