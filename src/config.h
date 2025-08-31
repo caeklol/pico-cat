@@ -28,4 +28,7 @@
 #define GREEN_MAX      255
 #define BLUE_MAX       255
 
+// for DEBUG_PRINT and DEBUG_INIT
+#define ENABLE_DEBUG
+
 #endif

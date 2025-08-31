@@ -2,8 +2,8 @@
 
 #include "pico/stdlib.h"
 
-#include "pcm_data.h"
 #include "globals.h"
+#include "pcm_data.h"
 
 volatile uint32_t pcm_index = 0;
 static struct repeating_timer timer;

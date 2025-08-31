@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "pico/stdlib.h"
 #include "pico/sleep.h"
 
@@ -86,7 +84,6 @@ void interact(bool edge) {
 	if (diff >= 600000) {
 		if (audio_is_playing(audio_config)) return;
 		if (audio_config != NULL) audio_play(audio_config);
-		printf("meowing\n");
 	} else {
 		led_interact();
 	}

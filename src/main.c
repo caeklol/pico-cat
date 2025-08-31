@@ -1,7 +1,5 @@
-#include <stdio.h>
 #include <math.h>
 
-#include "pico/stdlib.h"
 #include "pico/time.h"
 
 #include "hardware/clocks.h"
@@ -13,8 +11,8 @@
 #include "led.h"
 
 int main() {
-	stdio_init_all();
-	printf("stdio initialized\n");
+	DEBUG_INIT();
+	DEBUG_PRINT("debug initialized\n");
 
 	set_sys_clock_khz(220000, false); // 220MHz, giving fs*2 harmonic. yes, square waves
 									  // are supposed to only be odd harmonics. but in
@@ -22,7 +20,7 @@ int main() {
 									  // 440MHz signal than 88MHz. maybe it's some RF
 									  // thing, or maybe is a clkdiv thing, but whatever
 									  // works i guess
-	printf("overclocked!\n");
+	DEBUG_PRINT("overclocked!\n");
 	bool radio_enabled = radio_setup();
 
 	audio_configuration_t* audio = NULL;
@@ -35,7 +33,7 @@ int main() {
 	}
 
 	led_setup();
-	printf("setup done\n");
+	DEBUG_PRINT("setup done\n");
 
 	uint64_t last_tick = 0;
 
