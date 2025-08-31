@@ -4,6 +4,10 @@ cat lamp for sleeping \
 goofy light features \
 meows over 440MHz FM
 
+> [!CAUTION]
+> Please don't enable radio features if you don't know what you're doing! \
+> 440MHz is a licensed band in so get one first before proceeding
+
 ## hardware
 
 #### requirements
@@ -28,4 +32,8 @@ configuration is done via [`src/config.h`](src/config.h) \
 radio and debug (via serial) are disabled by default
 
 ## reception
-i got best results on my RTL-SDR at 25kHz with 50us de-emphasis
+these are my results with a subpar antenna[^1] about 65cm (25.5in~) away at max gain \
+TX antenna is a helical antenna[^2]
+
+[^1]: quarter wave groundplane from an N-type connector. not even tuned properly, as it's for 1090MHz ADS-B
+[^2]: this antenna is also tuned improperly, for GSM bands. this should hopefully reduce it so signal is only audible in my space
