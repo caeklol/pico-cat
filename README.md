@@ -34,10 +34,12 @@ radio and debug (via serial) are disabled by default
 
 ## reception
 these are my results with a subpar antenna[^1] about 65cm (25.5in~) away at max gain \
-TX antenna is a helical antenna[^2]
+TX antenna is a helical antenna[^2] \
+\
+(press unmute)
 
 <audio controls>
-  <source src="https://github.com/user-attachments/assets/6af0176f-af62-49cb-9074-fbdc35f72698" type="audio/mpeg">
+  <video src="https://github.com/user-attachments/assets/6af0176f-af62-49cb-9074-fbdc35f72698">
 </audio>
 
 [^1]: quarter wave groundplane from an N-type connector. not even tuned properly, as it's for 1090MHz ADS-B
